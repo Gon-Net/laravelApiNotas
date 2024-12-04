@@ -12,11 +12,23 @@ class NoteController extends Controller
     }
 
     function store(Request $request){
-        return Note::create($request-all());
+
+        // $validatedData = $request->validate([
+        //     'title' => 'required',
+        //     'content' => 'required'
+        // ]);
+
+        $date = date('Y-m-d H:i:s');
+        $request->merge(['date' => $date]);
+        return Note::create($request->all());
     }
 
     function show($id){
-        return Note::findOrFail($id);
+        $note = Note::find($id);
+        if(!$note){
+            return response()->json(['message' => 'Nota no encontrada'], 404);
+        } 
+        return $note;
     }
 
     function update(Request $request, $id){
